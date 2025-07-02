@@ -8,4 +8,7 @@ In this repository, I aim to tackle the problem of optimizing the ROC AUC in the
 
 ## 2. ROC (Receiver Operating Characteristic)
 
-I began this repo by implementing the code necessary to generate ROC curves, using micro-averaging to aggregate the True Positive Rates (TPRs) and False Positive Rates (FPRs) from the OvA classifiers. I visualized it using a simple dataset with 4 labels, 3 classes and 1 feature .![ROC_multiclass_micro_plot](https://github.com/user-attachments/assets/86f97e7c-b59f-43b7-b765-4bc6a691c693)
+I began this repo by implementing the code necessary to generate ROC curves, using micro-averaging to aggregate the True Positive Rates (TPRs) and False Positive Rates (FPRs) from the OvA classifiers. I visualized it using a simple dataset with 4 labels, 3 classes and 1 feature 
+<p align="center">
+  <img src="ROC_multiclass_micro_plot.png" alt="Description" width="400"/>
+</p>
