@@ -12,3 +12,9 @@ I began this repo by implementing the code necessary to generate ROC curves, usi
 <p align="center">
   <img src="ROC_multiclass_micro_plot.png" alt="Description" width="400"/>
 </p>
+
+## 3. A first model : linear classifier
+I trained a linear classifier using MNIST data using AUM as a loss function ( micro-averaging the OvA AUM) , I then drew the ROC curve before and after training.The ROC AUC seems to increase when the AUM decreases, but the distribution of the points in the ROC curve seems a bit weird ( as FPR jumps from 0.1 to 1 ):
+<p align="center">
+  <img src="ROC_Linear_Training_AUM.png" alt="Description" width="400"/>
+</p>
