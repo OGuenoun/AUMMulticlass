@@ -1,4 +1,4 @@
-# AUM Multi-class
+# [AUM](https://www.jmlr.org/papers/v24/21-0751.html) Multi-class
 
 *(The code in this repo was inspired by [this blog](https://tdhock.github.io/blog/2024/torch-roc-aum/))*
 
