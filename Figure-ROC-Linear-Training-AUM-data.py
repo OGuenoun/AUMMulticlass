@@ -56,8 +56,8 @@ def Proposed_AUM(pred_tensor, label_tensor,n_class):
     constant_diff = roc["min_constant"][1:].diff()
     return torch.sum(min_FPR_FNR * constant_diff)
 
-df = pd.read_csv("mnist_train.csv/mnist_train.csv")
-X = torch.tensor(df.iloc[:, 1:].values, dtype=torch.float32) 
+df = pd.read_csv("C:/Users/nou-z/Downloads/mnist_train.csv/mnist_train.csv")
+X = torch.tensor(df.iloc[:, 1:].values, dtype=torch.float32)/255 
 y = torch.tensor(df.iloc[:, 0].values, dtype=torch.long)
 
 #Defining the linear model
@@ -81,19 +81,25 @@ AUM_evolution=[]
 # Training step
 acc=0
 model.train()
-for epoch in range(20):
-    probs = model(X)
+probs = model(X)
+df=ROC_curve(probs,y,10)
+df['AUC']=ROC_AUC(probs,y,10)
+df_list.append(df)
+for epoch in range(600):
     loss = Proposed_AUM(probs, y,10)
     AUM_evolution.append(loss)
-    if(epoch%5==0):
-        df_list.append(ROC_curve(probs,y,10))
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
     print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
+    probs = model(X)
+df=ROC_curve(probs,y,10)
+df['AUC']=ROC_AUC(probs,y,10)
+df_list.append(df)
 list_1=[]
 for df in df_list:
     df = pd.DataFrame({k: v.detach().numpy() if v.requires_grad else v.numpy() for k, v in df.items()})
     list_1.append(df)
+
 list_1[0].to_csv("Initial_ROC_data.csv")
 list_1[-1].to_csv("Final_ROC_data.csv")

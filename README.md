@@ -14,7 +14,7 @@ I began this repo by implementing the code necessary to generate ROC curves, usi
 </p>
 
 ## 3. A first model : linear classifier
-I trained a linear classifier using MNIST data using AUM as a loss function ( micro-averaging the OvA AUM) , I then drew the ROC curve before and after training.The ROC AUC seems to increase when the AUM decreases, but the distribution of the points in the ROC curve seems a bit weird ( as FPR jumps from 0.1 to 1 ):
+I trained a linear classifier using MNIST data using AUM as a loss function ( micro-averaging the OvA AUM) , I then drew the ROC curve before and after training.The ROC AUC seems to increase when the AUM decreases : The initial AUC was 0.53 , the optimized AUC is 0.94
 <p align="center">
   <img src="ROC_Linear_Training_AUM.png" alt="Description" width="400"/>
 </p>

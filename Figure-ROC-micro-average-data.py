@@ -33,7 +33,6 @@ for i in range(3):
     "pred":OvA_classi(four_pred,i),
     "zero_one_loss":zero_one_loss(four_pred, four_labels,i)
     })
-    print(zero_one_df)
     zero_one_df_list.append(zero_one_df)
 
 ## Functions to compute TPR and FPR both micro and for each class when doing the OvA
