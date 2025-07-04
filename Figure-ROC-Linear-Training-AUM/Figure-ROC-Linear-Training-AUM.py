@@ -1,7 +1,7 @@
 import plotnine as p9
 import pandas as pd
-initial=pd.read_csv("Initial_ROC_data.csv")
-final=pd.read_csv("Final_ROC_data.csv")
+initial=pd.read_csv("./Figure-ROC-Linear-Training-AUM/Initial_ROC_data.csv")
+final=pd.read_csv("./Figure-ROC-Linear-Training-AUM/Final_ROC_data.csv")
 auc_initial=initial.iloc[0,-1]
 auc_final=final.iloc[0,-1]
 label_initial = f'Initial ROC (AUC = {auc_initial:.3f})'
