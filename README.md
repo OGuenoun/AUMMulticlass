@@ -18,3 +18,7 @@ I trained a linear classifier using MNIST data using AUM as a loss function ( mi
 <p align="center">
   <img src="Figure-ROC-Linear-Training-AUM/ROC_Linear_Training_AUM.png" alt="Description" width="400"/>
 </p>
+3.1 Comparing two loss functions : Cross-entropy and AUM
+<p align="center">
+  <img src="Figure-Comparing-CE-AUM\AUMvsCE.png" alt="Description" width="400"/>
+</p>
