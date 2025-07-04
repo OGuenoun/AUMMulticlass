@@ -10,11 +10,11 @@ In this repository, I aim to tackle the problem of optimizing the ROC AUC in the
 
 I began this repo by implementing the code necessary to generate ROC curves, using micro-averaging to aggregate the True Positive Rates (TPRs) and False Positive Rates (FPRs) from the OvA classifiers. I visualized it using a simple dataset with 4 labels, 3 classes and 1 feature 
 <p align="center">
-  <img src="ROC_multiclass_micro_plot.png" alt="Description" width="400"/>
+  <img src="Figure-ROC-multiclass/ROC_multiclass_micro_plot.png" alt="Description" width="400"/>
 </p>
 
 ## 3. A first model : linear classifier
 I trained a linear classifier using MNIST data using AUM as a loss function ( micro-averaging the OvA AUM) , I then drew the ROC curve before and after training.The ROC AUC seems to increase when the AUM decreases : The initial AUC was 0.53 , the optimized AUC is 0.94
 <p align="center">
-  <img src="ROC_Linear_Training_AUM.png" alt="Description" width="400"/>
+  <img src="Figure-ROC-Linear-Training-AUM/ROC_Linear_Training_AUM.png" alt="Description" width="400"/>
 </p>
