@@ -31,9 +31,8 @@ AUMvsCE=ggplot(summary_df, aes(x='median_auc', y='loss_function'))+\
     geom_point(size=2)+\
     geom_errorbarh(aes(xmin='q1_auc', xmax='q3_auc'), height=0.2)+\
     labs(
-        x='Test AUC, median and quartiles over training runs',
+        x='Test AUC, median and quartiles over imbalanced training runs',
         y='Loss function',
-        title='AUC Comparison Across Loss Functions using 10 different imbalanced datasets ( MNIST with each time taking 1 percent of each class)'
     )+\
     scale_x_continuous(limits=(0.90, 0.95))+\
     theme_bw()+\
