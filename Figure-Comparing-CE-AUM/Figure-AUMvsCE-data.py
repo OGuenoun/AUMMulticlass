@@ -78,6 +78,9 @@ AUM_AUC=[]
 CE_AUC=[]
 loss_fn=nn.CrossEntropyLoss()
 df = pd.read_csv("C:/Users/nou-z/Downloads/mnist_train.csv/mnist_train.csv")
+df_test=pd.read_csv("C:/Users/nou-z/Downloads/mnist_test.csv/mnist_test.csv")
+X_test=torch.tensor(df_test.iloc[:, 1:].values, dtype=torch.float32)/255 
+y_test=torch.tensor(df_test.iloc[:, 0].values, dtype=torch.long)
 for i in range(10):
     # Defining the imbalanced dataset
     sampling_fractions = {
@@ -107,7 +110,8 @@ for i in range(10):
         loss.backward()
         optimizer.step()
         acc=get_accuracy(probs,y,y.size()[0])
-    AUM_AUC.append(ROC_AUC(probs,y,10))
+    probs_test=model(X_test)
+    AUM_AUC.append(ROC_AUC(probs_test,y_test,10))
     model = LinearClassifier_AUM(input_dim=784, num_classes=10)
     optimizer = torch.optim.SGD(model.parameters(), lr=0.3)
     # Training step for CE
@@ -119,7 +123,8 @@ for i in range(10):
         loss.backward()
         optimizer.step()
         acc=get_accuracy(probs,y,y.size()[0])
-    CE_AUC.append(ROC_AUC(probs,y,10))
+    probs_test=model(X_test)
+    CE_AUC.append(ROC_AUC(probs_test,y_test,10).item())
     print(f"Finished {i} try")
 data_for_plotting=pd.DataFrame({
     'AUM':AUM_AUC,

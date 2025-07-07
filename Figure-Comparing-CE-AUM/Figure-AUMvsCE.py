@@ -1,11 +1,13 @@
 import pandas as pd 
 import torch
 import matplotlib.pyplot as plt
-df=pd.read_csv("./Figure-Comparing-CE-AUM-Data/AUMvsCE.csv")
+df=pd.read_csv("./Figure-Comparing-CE-AUM/AUMvsCE.csv")
 def extract_float(s):
     import re
+    if not isinstance(s, str):
+        return s
     match = re.search(r"tensor\(([\d.]+)\)", s)
-    return float(match.group(1))
+    return float(match.group(1))if match else None
 
 # Apply the function to every cell
 df_1 = df.iloc[:,1:3]
@@ -33,7 +35,7 @@ AUMvsCE=ggplot(summary_df, aes(x='median_auc', y='loss_function'))+\
         y='Loss function',
         title='AUC Comparison Across Loss Functions using 10 different imbalanced datasets ( MNIST with each time taking 1 percent of each class)'
     )+\
-    scale_x_continuous(limits=(0.95, 1.0001))+\
+    scale_x_continuous(limits=(0.90, 0.95))+\
     theme_bw()+\
     theme(
         figure_size=(5, 2.5),
