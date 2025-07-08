@@ -1,12 +1,13 @@
-import torch 
-import pandas as pd
-import matplotlib.pyplot as plt
-import torch.nn as nn
-import torch.nn.functional as F
-
 import torch
+import pandas as pd
 import torch.nn.functional as F
-
+#DATA
+four_labels = torch.tensor([0,2,1,1])
+four_pred = torch.tensor([[0.4, 0.3, 0.3],
+                         [ 0.2, 0.1, 0.7],
+                         [0.5,0.2,0.3],
+                         [0.3,0.4,0.3]])
+#Code for ROC and first step to AUM
 def ROC_curve(pred_tensor, label_tensor, n_class):
     one_hot_labels = F.one_hot(label_tensor, num_classes=n_class)
     is_positive = one_hot_labels
@@ -42,14 +43,14 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
         "min_constant": torch.cat([torch.tensor([-1], device=pred_tensor.device), uniq_thresh]),
         "max_constant": torch.cat([uniq_thresh, torch.tensor([1], device=pred_tensor.device)])
     }
-
-
+roc_efficient_df = pd.DataFrame(ROC_curve(four_pred, four_labels,3))
+#AUC
 def ROC_AUC(pred_tensor, label_tensor,n_class):
     roc = ROC_curve(pred_tensor, label_tensor,n_class)
     FPR_diff = roc["FPR"][1:]-roc["FPR"][:-1]
     TPR_sum = roc["TPR"][1:]+roc["TPR"][:-1]
     return torch.sum(FPR_diff*TPR_sum/2.0)
-
+#AUM 
 def Proposed_AUM(pred_tensor, label_tensor,n_class):
 
     roc = ROC_curve(pred_tensor, label_tensor,n_class)
@@ -57,50 +58,4 @@ def Proposed_AUM(pred_tensor, label_tensor,n_class):
     constant_diff = roc["min_constant"][1:].diff()
     return torch.sum(min_FPR_FNR * constant_diff)
 
-df = pd.read_csv("C:/Users/nou-z/Downloads/mnist_train.csv/mnist_train.csv")
-X = torch.tensor(df.iloc[:, 1:].values, dtype=torch.float32)/255 
-y = torch.tensor(df.iloc[:, 0].values, dtype=torch.long)
-
-#Defining the linear model
-class LinearClassifier_AUM(nn.Module):
-    def __init__(self, input_dim, n_class):
-        super(LinearClassifier_AUM, self).__init__()
-        self.linear = nn.Linear(input_dim, n_class)
-    
-    def forward(self, x):
-        logits = self.linear(x)
-        probs = F.softmax(logits, dim=1) 
-        return probs
-    
-model = LinearClassifier_AUM(input_dim=784, n_class=10)
-optimizer = torch.optim.SGD(model.parameters(), lr=0.2)
-
-df_list=[]
-AUM_evolution=[]
-
-
-# Training step
-acc=0
-model.train()
-probs = model(X)
-df=ROC_curve(probs,y,10)
-df['AUC']=ROC_AUC(probs,y,10)
-df_list.append(df)
-for epoch in range(600):
-    loss = Proposed_AUM(probs, y,10)
-    AUM_evolution.append(loss)
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
-    print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
-    probs = model(X)
-df=ROC_curve(probs,y,10)
-df['AUC']=ROC_AUC(probs,y,10)
-df_list.append(df)
-list_1=[]
-for df in df_list:
-    df = pd.DataFrame({k: v.detach().numpy() if v.requires_grad else v.numpy() for k, v in df.items()})
-    list_1.append(df)
-
-list_1[0].to_csv("Figure-ROC-Linear-Training-AUM/Initial_ROC_data.csv")
-list_1[-1].to_csv("Figure-ROC-Linear-Training-AUM/Final_ROC_data.csv")
+roc_efficient_df.to_csv("Micro-Average-AUM/Figure-ROC-multiclass/ROC-efficient-points.csv")

@@ -35,4 +35,4 @@ AUMvsCE=ggplot(summary_df, aes(x='median_auc', y='loss_function'))+\
 
 
 fig=AUMvsCE.draw()
-fig.savefig("Figure-Comparing-CE-AUM/AUMvsCE.png", dpi=300, bbox_inches='tight')
+fig.savefig("Micro-Average-AUM/Figure-Comparing-CE-AUM/AUMvsCE.png", dpi=300, bbox_inches='tight')

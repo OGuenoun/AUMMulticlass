@@ -94,4 +94,4 @@ def one_roc_point(constant):
 roc_inefficient_df = pd.concat([
     one_roc_point(constant) for constant in all_const_vec
 ])
-roc_inefficient_df.to_csv('Figure-ROC-multiclass/ROC-multiclass-points.csv', index=False)
+roc_inefficient_df.to_csv('Micro-Average-AUM/Figure-ROC-multiclass/ROC-multiclass-points.csv', index=False)
