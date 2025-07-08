@@ -2,17 +2,7 @@ import pandas as pd
 import torch
 import matplotlib.pyplot as plt
 df=pd.read_csv("./Figure-Comparing-CE-AUM/AUMvsCE.csv")
-def extract_float(s):
-    import re
-    if not isinstance(s, str):
-        return s
-    match = re.search(r"tensor\(([\d.]+)\)", s)
-    return float(match.group(1))if match else None
-
-# Apply the function to every cell
-df_1 = df.iloc[:,1:3]
-df_1 = df_1.applymap(extract_float)
-df_long = df_1.melt(var_name="loss_function", value_name="auc")
+df_long = df.melt(var_name="loss_function", value_name="auc")
 summary_df = (
     df_long.groupby("loss_function")
     .agg(
@@ -29,7 +19,7 @@ from plotnine import (
 
 AUMvsCE=ggplot(summary_df, aes(x='median_auc', y='loss_function'))+\
     geom_point(size=2)+\
-    geom_errorbarh(aes(xmin='q1_auc', xmax='q3_auc'), height=0.2)+\
+    geom_errorbarh(aes(xmin='q1_auc', xmax='q3_auc'), height=0.1)+\
     labs(
         x='Test AUC, median and quartiles over imbalanced training runs',
         y='Loss function',
@@ -45,4 +35,4 @@ AUMvsCE=ggplot(summary_df, aes(x='median_auc', y='loss_function'))+\
 
 
 fig=AUMvsCE.draw()
-fig.savefig("AUMvsCE.png", dpi=300, bbox_inches='tight')
+fig.savefig("Figure-Comparing-CE-AUM/AUMvsCE.png", dpi=300, bbox_inches='tight')

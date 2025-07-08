@@ -21,4 +21,4 @@ gg_roc_efficient = p9.ggplot()+\
         data=roc_efficient_df
     )
 fig = gg_roc_efficient.draw()
-fig.savefig("ROC_multiclass_micro_efficient_plot.png", dpi=300, bbox_inches='tight')
+fig.savefig("Figure-ROC-multiclass/ROC_multiclass_micro_efficient_plot.png", dpi=300, bbox_inches='tight')

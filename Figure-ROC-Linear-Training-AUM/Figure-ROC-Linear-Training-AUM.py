@@ -21,4 +21,4 @@ gg_plot_roc = p9.ggplot()+\
     )+\
      p9.labs(color="Legend", title="ROC Curves")
 fig = gg_plot_roc.draw()
-fig.savefig("ROC_Linear_Training_AUM.png", dpi=300, bbox_inches='tight')
+fig.savefig("Figure-ROC-Linear-Training-AUM/ROC_Linear_Training_AUM.png", dpi=300, bbox_inches='tight')
