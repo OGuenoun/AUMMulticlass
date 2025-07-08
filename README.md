@@ -22,4 +22,4 @@ I trained a linear classifier using MNIST data using AUM as a loss function ( mi
 <p align="center">
   <img src="Figure-Comparing-CE-AUM\AUMvsCE.png" alt="Description" width="400"/>
 </p>
-To get this figure , I trained a linear classifier on the MNIST dataset keeping at each training run only 1% of each class , this means I trained the linear classifier 10 times . In this figure , Cross-entropy (unweighted) seems to give better AUC scores than the AUM even when trained on imbalanced datasets which was surprising to me because the unweighted cross-entropy doesn't do well when trained on imbalanced datasets
+To get this figure , I trained a linear classifier on the MNIST dataset keeping at each training run only 1% of each class using two different loss functions : AUM and Cross entropy ( unweighted) , this means I trained the linear classifier 10 times . In this figure , the AUM gives slightly better AUC scores than unweighted cross entropy which is known to not perform very well on imbalanced train datasets ( using AUC as a metric)
