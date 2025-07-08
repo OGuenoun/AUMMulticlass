@@ -24,7 +24,7 @@ AUMvsCE=ggplot(summary_df, aes(x='median_auc', y='loss_function'))+\
         x='Test AUC, median and quartiles over imbalanced training runs',
         y='Loss function',
     )+\
-    scale_x_continuous(limits=(0.90, 0.95))+\
+    scale_x_continuous(limits=(0.9, 0.95))+\
     theme_bw()+\
     theme(
         figure_size=(5, 2.5),

@@ -127,4 +127,4 @@ data_for_plotting=pd.DataFrame({
     'AUM':AUM_AUC,
     'Cross Entropy':CE_AUC
 })
-data_for_plotting.to_csv("Figure-Comparing-CE-AUM/AUMvsCE.csv")
+data_for_plotting.to_csv("Figure-Comparing-CE-AUM/AUMvsCE.csv",index=False)
