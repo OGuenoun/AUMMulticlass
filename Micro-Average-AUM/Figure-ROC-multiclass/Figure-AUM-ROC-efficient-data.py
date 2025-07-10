@@ -55,5 +55,5 @@ def Proposed_AUM(pred_tensor, label_tensor,n_class):
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1]
     constant_diff = roc["min_constant"][1:].diff()
     return torch.sum(min_FPR_FNR * constant_diff)
-
+print(Proposed_AUM(four_pred,four_labels,3))
 roc_efficient_df.to_csv("Micro-Average-AUM/Figure-ROC-multiclass/ROC-efficient-points.csv")
