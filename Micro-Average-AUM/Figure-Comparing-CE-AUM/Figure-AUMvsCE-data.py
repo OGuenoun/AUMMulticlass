@@ -14,10 +14,8 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
     one_hot_labels = F.one_hot(label_tensor, num_classes=n_class)
     is_positive = one_hot_labels
     is_negative =1-one_hot_labels
-    fn_diff = -is_positive
-    fp_diff = is_negative
-    fn_diff = fn_diff.flatten()
-    fp_diff = fp_diff.flatten()
+    fn_diff = -is_positive.flatten()
+    fp_diff = is_negative.flatten()
     thresh_tensor = -pred_tensor.flatten()
     fn_denom = is_positive.sum()
     fp_denom = is_negative.sum()
@@ -42,8 +40,8 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
         "FNR": FNR,
         "TPR": 1 - FNR,
         "min(FPR,FNR)": torch.minimum(FPR, FNR),
-        "min_constant": torch.cat([torch.tensor([-1], device=pred_tensor.device), uniq_thresh]),
-        "max_constant": torch.cat([uniq_thresh, torch.tensor([1], device=pred_tensor.device)])
+        "min_constant": torch.cat([torch.tensor([-1]), uniq_thresh]),
+        "max_constant": torch.cat([uniq_thresh, torch.tensor([0])])
     }
 
 def ROC_AUC(pred_tensor, label_tensor,n_class):
