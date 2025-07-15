@@ -10,8 +10,9 @@ def get_accuracy(logit, target, batch_size):
     accuracy = 100.0 * corrects/batch_size
     return accuracy.item()
 
-def ROC_curve(pred_tensor, label_tensor, n_class):
-    one_hot_labels = F.one_hot(label_tensor, num_classes=n_class)
+def ROC_curve(pred_tensor, label_tensor):
+    n_class=pred_tensor.size(1)
+    one_hot_labels = F.one_hot(label_tensor, num_classes=n_class) 
     is_positive = one_hot_labels
     is_negative =1-one_hot_labels
     fn_diff = -is_positive.flatten()
@@ -43,16 +44,15 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
         "min_constant": torch.cat([torch.tensor([-1]), uniq_thresh]),
         "max_constant": torch.cat([uniq_thresh, torch.tensor([0])])
     }
-
-def ROC_AUC(pred_tensor, label_tensor,n_class):
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+#AUC
+def ROC_AUC(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     FPR_diff = roc["FPR"][1:]-roc["FPR"][:-1]
     TPR_sum = roc["TPR"][1:]+roc["TPR"][:-1]
     return torch.sum(FPR_diff*TPR_sum/2.0)
-
-def Proposed_AUM(pred_tensor, label_tensor,n_class):
-
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+#AUM 
+def Proposed_AUM(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1]
     constant_diff = roc["min_constant"][1:].diff()
     return torch.sum(min_FPR_FNR * constant_diff)
@@ -100,13 +100,13 @@ for i in range(10):
     probs = model(X)
     for epoch in range(1000):
         probs = model(X)
-        loss = Proposed_AUM(probs, y,10)
+        loss = Proposed_AUM(probs, y)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         acc=get_accuracy(probs,y,y.size()[0])
     probs_test=model(X_test)
-    AUM_AUC.append(ROC_AUC(probs_test,y_test,10).item())
+    AUM_AUC.append(ROC_AUC(probs_test,y_test).item())
     model = LinearClassifier_AUM(input_dim=784, num_classes=10)
     optimizer = torch.optim.SGD(model.parameters(), lr=0.3)
     # Training step for CE
@@ -119,7 +119,7 @@ for i in range(10):
         optimizer.step()
         acc=get_accuracy(probs,y,y.size()[0])
     probs_test=model(X_test)
-    CE_AUC.append(ROC_AUC(probs_test,y_test,10).item())
+    CE_AUC.append(ROC_AUC(probs_test,y_test).item())
     print(f"Finished {i} try")
 data_for_plotting=pd.DataFrame({
     'AUM':AUM_AUC,

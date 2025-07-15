@@ -7,8 +7,9 @@ import torch.nn.functional as F
 import torch
 import torch.nn.functional as F
 
-def ROC_curve(pred_tensor, label_tensor, n_class):
-    one_hot_labels = F.one_hot(label_tensor, num_classes=n_class)
+def ROC_curve(pred_tensor, label_tensor):
+    n_class=pred_tensor.size(1)
+    one_hot_labels = F.one_hot(label_tensor, num_classes=n_class) 
     is_positive = one_hot_labels
     is_negative =1-one_hot_labels
     fn_diff = -is_positive.flatten()
@@ -40,17 +41,15 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
         "min_constant": torch.cat([torch.tensor([-1]), uniq_thresh]),
         "max_constant": torch.cat([uniq_thresh, torch.tensor([0])])
     }
-
-
-def ROC_AUC(pred_tensor, label_tensor,n_class):
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+#AUC
+def ROC_AUC(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     FPR_diff = roc["FPR"][1:]-roc["FPR"][:-1]
     TPR_sum = roc["TPR"][1:]+roc["TPR"][:-1]
     return torch.sum(FPR_diff*TPR_sum/2.0)
-
-def Proposed_AUM(pred_tensor, label_tensor,n_class):
-
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+#AUM 
+def Proposed_AUM(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1]
     constant_diff = roc["min_constant"][1:].diff()
     return torch.sum(min_FPR_FNR * constant_diff)
@@ -78,22 +77,21 @@ AUM_evolution=[]
 
 
 # Training step
-acc=0
 model.train()
 probs = model(X)
-df=ROC_curve(probs,y,10)
-df['AUC']=ROC_AUC(probs,y,10)
+df=ROC_curve(probs,y)
+df['AUC']=ROC_AUC(probs,y)
 df_list.append(df)
 for epoch in range(600):
-    loss = Proposed_AUM(probs, y,10)
+    loss = Proposed_AUM(probs, y)
     AUM_evolution.append(loss)
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
     print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
     probs = model(X)
-df=ROC_curve(probs,y,10)
-df['AUC']=ROC_AUC(probs,y,10)
+df=ROC_curve(probs,y)
+df['AUC']=ROC_AUC(probs,y)
 df_list.append(df)
 list_1=[]
 for df in df_list:

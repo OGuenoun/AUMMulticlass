@@ -8,8 +8,9 @@ four_pred = torch.tensor([[0.4, 0.3, 0.3],
                          [0.5,0.2,0.3],
                          [0.3,0.4,0.3]])
 #Code for ROC and first step to AUM
-def ROC_curve(pred_tensor, label_tensor, n_class):
-    one_hot_labels = F.one_hot(label_tensor, num_classes=n_class)
+def ROC_curve(pred_tensor, label_tensor):
+    n_class=pred_tensor.size(1)
+    one_hot_labels = F.one_hot(label_tensor, num_classes=n_class) 
     is_positive = one_hot_labels
     is_negative =1-one_hot_labels
     fn_diff = -is_positive.flatten()
@@ -41,19 +42,18 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
         "min_constant": torch.cat([torch.tensor([-1]), uniq_thresh]),
         "max_constant": torch.cat([uniq_thresh, torch.tensor([0])])
     }
-roc_efficient_df = pd.DataFrame(ROC_curve(four_pred, four_labels,3))
+roc_efficient_df = pd.DataFrame(ROC_curve(four_pred, four_labels))
 #AUC
-def ROC_AUC(pred_tensor, label_tensor,n_class):
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+def ROC_AUC(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     FPR_diff = roc["FPR"][1:]-roc["FPR"][:-1]
     TPR_sum = roc["TPR"][1:]+roc["TPR"][:-1]
     return torch.sum(FPR_diff*TPR_sum/2.0)
 #AUM 
-def Proposed_AUM(pred_tensor, label_tensor,n_class):
-
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+def Proposed_AUM(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1]
     constant_diff = roc["min_constant"][1:].diff()
     return torch.sum(min_FPR_FNR * constant_diff)
-print(Proposed_AUM(four_pred,four_labels,3))
+print(Proposed_AUM(four_pred,four_labels))
 roc_efficient_df.to_csv("Micro-Average-AUM/Figure-ROC-multiclass/ROC-efficient-points.csv")

@@ -13,7 +13,8 @@ four_pred = torch.tensor([[0.4, 0.3, 0.3],
 
 #Defining useful functions
 
-def ROC_curve(pred_tensor, label_tensor, n_class):
+def ROC_curve(pred_tensor, label_tensor):
+    n_class=pred_tensor.size(1)
     one_hot_labels = F.one_hot(label_tensor, num_classes=n_class)
     is_positive = one_hot_labels
     is_negative =1-one_hot_labels
@@ -36,7 +37,7 @@ def ROC_curve(pred_tensor, label_tensor, n_class):
         "TPR_all_classes": 1 - FNR,
         "min(FPR,FNR)": torch.minimum(FPR, FNR),
         "min_constant": torch.cat([-torch.ones(1,n_class), sorted_thresh]),
-        "max_constant": torch.cat([thresh_tensor, zeros_vec])
+        "max_constant": torch.cat([sorted_thresh, zeros_vec])
     }
 
 def ROC_AUC(pred_tensor, label_tensor,n_class):
