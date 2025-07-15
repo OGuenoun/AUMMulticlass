@@ -40,16 +40,16 @@ def ROC_curve(pred_tensor, label_tensor):
         "max_constant": torch.cat([sorted_thresh, zeros_vec])
     }
 
-def ROC_AUC(pred_tensor, label_tensor,n_class):
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+def ROC_AUC(pred_tensor, label_tensor):
+    roc = ROC_curve(pred_tensor, label_tensor)
     FPR_diff = roc["FPR_all_classes"][1:,:]-roc["FPR_all_classes"][:-1,]
     TPR_sum = roc["TPR_all_classes"][1:,:]+roc["TPR_all_classes"][:-1,:]
     auc= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
     return torch.mean(auc)
 
-def Proposed_AUM(pred_tensor, label_tensor,n_class):
+def Proposed_AUM(pred_tensor, label_tensor):
 
-    roc = ROC_curve(pred_tensor, label_tensor,n_class)
+    roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1,:]
     constant_diff = roc["min_constant"][1:,:].diff(dim=0)
     aum= torch.sum(min_FPR_FNR * constant_diff,dim=0)
