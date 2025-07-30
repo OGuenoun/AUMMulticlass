@@ -38,7 +38,7 @@ AUM_evolution=[]
 model.train()
 probs = model(X)
 auc_before=ROC_AUC(probs,y)
-for epoch in range(10):
+for epoch in range(5):
     loss = Proposed_AUM(probs, y)
     AUM_evolution.append(loss)
     optimizer.zero_grad()
