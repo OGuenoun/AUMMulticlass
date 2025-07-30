@@ -21,8 +21,8 @@ def ROC_curve(pred_tensor, label_tensor):
     fn_diff = -is_positive
     fp_diff = is_negative
     thresh_tensor = -pred_tensor
-    fn_denom = is_positive.sum(dim=0)
-    fp_denom = is_negative.sum(dim=0)
+    fn_denom = is_positive.sum(dim=0).clamp(min=1)
+    fp_denom = is_negative.sum(dim=0).clamp(min=1)
     sorted_indices = torch.argsort(thresh_tensor,dim=0)
     sorted_fp_cum = torch.div(torch.gather(fp_diff, dim=0, index=sorted_indices).cumsum(0), fp_denom)
     sorted_fn_cum = -torch.div(torch.gather(fn_diff, dim=0, index=sorted_indices).flip(0).cumsum(0).flip(0) , fn_denom)
@@ -44,16 +44,18 @@ def ROC_AUC(pred_tensor, label_tensor):
     roc = ROC_curve(pred_tensor, label_tensor)
     FPR_diff = roc["FPR_all_classes"][1:,:]-roc["FPR_all_classes"][:-1,]
     TPR_sum = roc["TPR_all_classes"][1:,:]+roc["TPR_all_classes"][:-1,:]
-    sum= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
-    mask = torch.isnan(sum).logical_not()
-    sum_valid = sum[mask]
-    return  sum_valid.mean()
+    sum_FPR_TPR= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
+    count_non_defined=(sum_FPR_TPR == 0).sum()
+    if count_non_defined==pred_tensor.size(1):
+        return 0
+    return  sum_FPR_TPR.sum()/(pred_tensor.size(1)-count_non_defined)
 def Proposed_AUM(pred_tensor, label_tensor):
 
     roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1,:]
     constant_diff = roc["min_constant"][1:,:].diff(dim=0)
-    sum= torch.sum(min_FPR_FNR * constant_diff,dim=0)
-    mask = torch.isnan(sum).logical_not()
-    sum_valid = sum[mask]
-    return sum_valid.mean()
+    sum_min= torch.sum(min_FPR_FNR * constant_diff,dim=0)
+    count_non_defined=(sum_min== 0).sum()
+    if count_non_defined==pred_tensor.size(1):
+        return 0
+    return  sum_min.sum()/(pred_tensor.size(1)-count_non_defined)
