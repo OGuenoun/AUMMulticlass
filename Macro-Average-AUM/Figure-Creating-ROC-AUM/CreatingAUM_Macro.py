@@ -44,13 +44,16 @@ def ROC_AUC(pred_tensor, label_tensor):
     roc = ROC_curve(pred_tensor, label_tensor)
     FPR_diff = roc["FPR_all_classes"][1:,:]-roc["FPR_all_classes"][:-1,]
     TPR_sum = roc["TPR_all_classes"][1:,:]+roc["TPR_all_classes"][:-1,:]
-    auc= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
-    return torch.mean(auc)
-
+    sum= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
+    mask = torch.isnan(sum).logical_not()
+    sum_valid = sum[mask]
+    return  sum_valid.mean()
 def Proposed_AUM(pred_tensor, label_tensor):
 
     roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1,:]
     constant_diff = roc["min_constant"][1:,:].diff(dim=0)
-    aum= torch.sum(min_FPR_FNR * constant_diff,dim=0)
-    return torch.mean(aum)
+    sum= torch.sum(min_FPR_FNR * constant_diff,dim=0)
+    mask = torch.isnan(sum).logical_not()
+    sum_valid = sum[mask]
+    return sum_valid.mean()
