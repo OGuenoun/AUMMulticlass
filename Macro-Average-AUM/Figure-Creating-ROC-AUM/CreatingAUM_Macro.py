@@ -45,7 +45,6 @@ def ROC_AUC(pred_tensor, label_tensor):
     unique_labs = torch.unique(label_tensor, return_counts=False)
     mask = torch.zeros(pred_tensor.size(1), dtype=torch.bool)
     mask[unique_labs] = True
-    actual_n_classes=unique_labs.size(0)
     FPR_diff = roc["FPR_all_classes"][1:,:]-roc["FPR_all_classes"][:-1,]
     TPR_sum = roc["TPR_all_classes"][1:,:]+roc["TPR_all_classes"][:-1,:]
     sum_FPR_TPR= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
