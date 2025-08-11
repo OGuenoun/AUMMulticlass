@@ -42,20 +42,22 @@ def ROC_curve(pred_tensor, label_tensor):
 
 def ROC_AUC(pred_tensor, label_tensor):
     roc = ROC_curve(pred_tensor, label_tensor)
+    unique_labs = torch.unique(label_tensor, return_counts=False)
+    mask = torch.zeros(pred_tensor.size(1), dtype=torch.bool)
+    mask[unique_labs] = True
+    actual_n_classes=unique_labs.size(0)
     FPR_diff = roc["FPR_all_classes"][1:,:]-roc["FPR_all_classes"][:-1,]
     TPR_sum = roc["TPR_all_classes"][1:,:]+roc["TPR_all_classes"][:-1,:]
     sum_FPR_TPR= torch.sum(FPR_diff*TPR_sum/2.0,dim=0)
-    count_non_defined=(sum_FPR_TPR == 0).sum()
-    if count_non_defined==pred_tensor.size(1):
-        return 0
-    return  sum_FPR_TPR.sum()/(pred_tensor.size(1)-count_non_defined)
+    return  sum_FPR_TPR[mask].mean()
 def Proposed_AUM(pred_tensor, label_tensor):
-
+    actual_n_classes = torch.unique(label_tensor, return_counts=False).size(0)
     roc = ROC_curve(pred_tensor, label_tensor)
     min_FPR_FNR = roc["min(FPR,FNR)"][1:-1,:]
     constant_diff = roc["min_constant"][1:,:].diff(dim=0)
     sum_min= torch.sum(min_FPR_FNR * constant_diff,dim=0)
-    count_non_defined=(sum_min== 0).sum()
-    if count_non_defined==pred_tensor.size(1):
-        return 0
-    return  sum_min.sum()/(pred_tensor.size(1)-count_non_defined)
+    return  sum_min.sum()/actual_n_classes
+
+from sklearn.metrics import roc_auc_score
+print(f"scikit{roc_auc_score(four_labels.numpy(),four_pred.numpy(),average='macro',multi_class='ovr')}")
+print(ROC_AUC(four_pred,four_labels))
