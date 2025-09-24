@@ -6,6 +6,8 @@
 
 In this repository, I aim to tackle the problem of optimizing the ROC AUC in the context of multiclass classification. The approach used is One-vs-All (OvA), where the multiclass problem is reduced to multiple binary classification problems.
 
+The [Jupyter notebook](https://github.com/OGuenoun/AUMMulticlass/blob/main/AUM_multiclass_notebook.ipynb) explains the concept and the difference between macro and micro averaging. for more results on these loss functions, please visit this repo : https://github.com/OGuenoun/R-AUM_Multiclass
+
 ## 2. ROC (Receiver Operating Characteristic) *(The code in this part was inspired by [this blog](https://tdhock.github.io/blog/2024/torch-roc-aum/))*
 
 I began this repo by implementing the code necessary to generate ROC curves, using micro-averaging to aggregate the True Positive Rates (TPRs) and False Positive Rates (FPRs) from the OvA classifiers. I visualized it using a simple dataset with 4 labels, 3 classes and 1 feature 
