@@ -100,7 +100,7 @@ for i in range(10):
     probs = model(X)
     for epoch in range(1000):
         probs = model(X)
-        loss = Proposed_AUM(probs, y)
+        loss = Proposed_AUM(probs, y)+loss_fn(probs,y)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -125,4 +125,4 @@ data_for_plotting=pd.DataFrame({
     'AUM':AUM_AUC,
     'Cross Entropy':CE_AUC
 })
-data_for_plotting.to_csv("Micro-Average-AUM/Figure-Comparing-CE-AUM/AUMvsCE.csv",index=False)
+data_for_plotting.to_csv("AUMvsCE.csv",index=False)

@@ -60,3 +60,4 @@ def Proposed_AUM(pred_tensor, label_tensor):
 from sklearn.metrics import roc_auc_score
 print(f"scikit{roc_auc_score(four_labels.numpy(),four_pred.numpy(),average='macro',multi_class='ovr')}")
 print(ROC_AUC(four_pred,four_labels))
+print(Proposed_AUM(four_pred,four_labels))
